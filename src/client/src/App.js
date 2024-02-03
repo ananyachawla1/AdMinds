@@ -5,6 +5,7 @@ import MovieListHeading from './components/MovieListHeading';
 import SearchBox from './components/SearchBox';
 import AddFavourites from './components/AddFavourites';
 import RemoveFavourites from './components/RemoveFavourites';
+import MovieDetails from './components/MovieDetails';
 
 const App = () => {
   const [ActionMovies, setActionMovies] = useState([]);
@@ -12,6 +13,7 @@ const App = () => {
   const [ComedyMovies, setComedyMovies] = useState([]);
   const [favourites, setFavourites] = useState([]);
   const [searchValue, setSearchValue] = useState('');
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   const getMovieRequest = async (genre) => {
     const url = `https://cla-epg.lgads.tv/epg/listings?genre=${genre}&showType=movie`;
@@ -63,10 +65,14 @@ const App = () => {
     );
   };
 
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+  };
+
   return (
     <div className='container-fluid movie-app'>
       <div className='row d-flex align-items-center mt-4 mb-4'>
-        <MovieListHeading heading='Movies' />
+        <MovieListHeading heading='AdMinds' />
         <SearchBox value={searchValue} onChange={setSearchValue} />
       </div>
       <div className='row'>
@@ -75,6 +81,7 @@ const App = () => {
           movies={filterMoviesByQuery(ActionMovies)}
           handleFavouritesClick={addFavouriteMovie}
           favouriteComponent={AddFavourites}
+		  handleMovieClick={handleMovieClick}
         />
         <br />
         <h2>Thriller Movies</h2>
@@ -82,6 +89,7 @@ const App = () => {
           movies={filterMoviesByQuery(ThrillerMovies)}
           handleFavouritesClick={addFavouriteMovie}
           favouriteComponent={AddFavourites}
+		  handleMovieClick={handleMovieClick}
         />
         <br />
         <h2>Comedy Movies</h2>
@@ -89,6 +97,7 @@ const App = () => {
           movies={filterMoviesByQuery(ComedyMovies)}
           handleFavouritesClick={addFavouriteMovie}
           favouriteComponent={AddFavourites}
+		  handleMovieClick={handleMovieClick}
         />
       </div>
       <div className='row d-flex align-items-center mt-4 mb-4'>
@@ -101,6 +110,7 @@ const App = () => {
           favouriteComponent={RemoveFavourites}
         />
       </div>
+	  <MovieDetails movie={selectedMovie} />
     </div>
   );
 };

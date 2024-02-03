@@ -95,3 +95,14 @@ body {
 	padding: 20px;
 	text-align: center;
 }
+
+/* Update existing styles */
+.search-box {
+    width: 300px;  /* Set your desired width */
+    height: 30px;
+    margin-left: 1150px;  /* Move to the right by aligning with the right edge */
+    margin-right: 20px;  /* Add some margin for spacing */
+    border: 2px solid #ccc;  /* Set border properties: width, style, and color */
+    border-radius: 5px;  /* Optional: Add border-radius for rounded corners */
+}
+
