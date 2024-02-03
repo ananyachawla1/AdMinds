@@ -61,7 +61,7 @@ const date = req.query.date;
     axios.get(`https://cla-pixel.lgads.tv/pixels?deviceId=${deviceId}&date=${date}`, { headers })
       .then( data => {
         // console.log("Pixel data....", data);
-        // res.status(200).json(data.data);
+        res.status(200).json(data.data);
         // console.log("Pixel data....", data);
       // hit EPG Listing looping over the array received in above pixel request, pick each stationId. Collect all promises.
     //   const promises = data.data.map((pixelItem, index) => {//promises array of all api calls
