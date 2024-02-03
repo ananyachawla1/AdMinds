@@ -9,13 +9,17 @@ const MovieList = (props) => {
     // Add the movie title to the set to track unique titles
     setUniqueTitles((prevTitles) => new Set([...prevTitles, movie.programInfo.programTitle]));
   };
+  const handleMovieClick = (movie) => {
+    // setSelectedMovie(movie);
+    console.log(`Clicked on movie: ${movie.programInfo.programTitle}`);
+  };
 
   return (
     <div className='d-flex flex-wrap justify-content-start' style={{ display: 'flex', flexDirection: 'row' }}>
       {props.movies.map((movie, index) => (
         // Only render the movie if its title is not in the set of unique titles
         !uniqueTitles.has(movie.programInfo.programTitle) && (
-          <div className='image-container m-3' key={index} style={{ flex: '0 0 15%', width: '100px', padding:20 }}>
+          <div className='image-container m-3' key={index} style={{ flex: '0 0 15%', width: '100px', padding:20 }} onClick={() => handleMovieClick(movie)}>
             {movie.programInfo && movie.programInfo.images && movie.programInfo.images.length > 0 && (
               <img
                 src={movie.programInfo.images[0].url}
