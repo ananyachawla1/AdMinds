@@ -1,9 +1,11 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3001;
 const axios = require("axios");
+const cors = require('cors')
 const bluebird = require('bluebird')
 app.use(express.json()); //parsing response from lg api
+app.use(cors());
 const headers = {
   "Content-Type": "application/json",
   "Authorization": "Bearer Bj8YrhQMj", //validation of user
