@@ -17,6 +17,7 @@ const App = () => {
 
   const getMovieRequest = async (genre) => {
     const url = `https://cla-epg.lgads.tv/epg/listings?genre=${genre}&showType=movie`;
+	// const url="http://localhost:3000/epg/recommendation?deviceId=02135de2ef0a1a96f0f237dcb0c2af8c&date=2024-01-01"
 
     const response = await fetch(url, {
       headers: {
@@ -45,11 +46,11 @@ const App = () => {
   };
 
   const addFavouriteMovie = (movie) => {
-    const newFavouriteList = [...favourites, movie];
-    setFavourites(newFavouriteList);
-    saveToLocalStorage(newFavouriteList);
+	const newFavouriteList = [...favourites, movie];
+	setFavourites(newFavouriteList);
+	saveToLocalStorage(newFavouriteList);
   };
-
+  
   const removeFavouriteMovie = (movie) => {
     const newFavouriteList = favourites.filter(
       (favourite) => favourite.imdbID !== movie.imdbID
