@@ -61,7 +61,7 @@ const date = req.query.date;
     axios.get(`https://cla-pixel.lgads.tv/pixels?deviceId=${deviceId}&date=${date}`, { headers })
       .then( data => {
         // console.log("Pixel data....", data);
-        res.status(200).json(data.data);
+        // res.status(200).json(data.data);
         // console.log("Pixel data....", data);
       // hit EPG Listing looping over the array received in above pixel request, pick each stationId. Collect all promises.
     //   const promises = data.data.map((pixelItem, index) => {//promises array of all api calls
@@ -79,7 +79,7 @@ const date = req.query.date;
 
       //Bluebird mapSeries
       bluebird.mapSeries(data.data, function(value, index, arrayLength) {
-        return axios.get(`https://cla-epg.lgads.tv/epg/listings?src=tms&stationId=${value.stationId}`, { headers }).then((data) => {
+        return axios.get(`https://cla-epg.lgads.tv/epg/listings?src=tms&stationId=${value.stationId}&startTime=2024-01-02T04:00:00&endTime=2024-01-02T05:00:00`, { headers }).then((data) => {
           return data.data;
       })}).then(result => {
         console.log("Done!...", result);
