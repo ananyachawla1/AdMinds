@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MovieDetails = ({ movie }) => {
+const MovieDetails = ({ movie, onGoBack }) => {
   if (!movie) {
     return null;
   }
@@ -11,7 +11,7 @@ const MovieDetails = ({ movie }) => {
       <p>Genre: {movie.programInfo.genre}</p>
       <p>Release Date: {movie.programInfo.releaseDate}</p>
       {/* Add more details here based on your movie structure */}
-      <button onClick={() => window.history.back()}>Go Back</button>
+      <button onClick={onGoBack}>Go Back</button>
     </div>
   );
 };

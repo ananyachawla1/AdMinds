@@ -70,6 +70,10 @@ const App = () => {
     setSelectedMovie(movie);
   };
 
+  const handleGoBack = () => {
+    setSelectedMovie(null);
+  };
+
   return (
     <div className='container-fluid movie-app'>
       <div className='row d-flex align-items-center mt-4 mb-4'>
@@ -77,6 +81,7 @@ const App = () => {
         <SearchBox value={searchValue} onChange={setSearchValue} />
       </div>
       <div className='row'>
+	  {selectedMovie && <MovieDetails movie={selectedMovie} onGoBack={handleGoBack} />}
         <h2>Action Movies</h2>
         <MovieList
           movies={filterMoviesByQuery(ActionMovies)}
@@ -109,9 +114,10 @@ const App = () => {
           movies={favourites}
           handleFavouritesClick={removeFavouriteMovie}
           favouriteComponent={RemoveFavourites}
+		  handleMovieClick={handleMovieClick}
         />
       </div>
-	  <MovieDetails movie={selectedMovie} />
+	  {/* <MovieDetails movie={selectedMovie} /> */}
     </div>
   );
 };
