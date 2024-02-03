@@ -24,6 +24,39 @@
 
 // export default App;
 
+
+// // src/App.js
+// import React from 'react';
+// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+// import Navbar from './components/Navbar';
+// import Profile from './components/Profile';
+// import Movies from './components/Movies';
+
+// const user = { name: 'John' }; // Placeholder user data
+
+// const App = () => {
+//   return (
+//     <Router>
+//       <Navbar />
+//       <Routes>
+//         <Route path="/profile" element={<Profile user={user} />} />
+//         <Route path="/movies" element={<Movies />} />
+//         <Route path="/" element={<Home />} />
+//       </Routes>
+//     </Router>
+//   );
+// };
+
+// const Home = () => (
+//   <div>
+//     <h2>Home</h2>
+//     {/* Add any other content for the Home page */}
+//     <Movies />
+//   </div>
+// );
+
+// export default App;
+
 import React, { useState, useEffect } from 'react';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -32,7 +65,7 @@ import MovieListHeading from './components/MovieListHeading';
 import SearchBox from './components/SearchBox';
 import AddFavourites from './components/AddFavourites';
 import RemoveFavourites from './components/RemoveFavourites';
-import NavBar from './components/NavBar';
+// import NavBar from './components/NavBar';
 
 const App = () => {
 	const [movies, setMovies] = useState([]);
@@ -40,13 +73,18 @@ const App = () => {
 	const [searchValue, setSearchValue] = useState('');
 
 	const getMovieRequest = async (searchValue) => {
-		const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=263d22d8`;
+		const url = "https://cla-epg.lgads.tv/epg/listings?genre=Action&showType=movie" 
 
-		const response = await fetch(url);
+		const response = await fetch(url,{
+			headers: {
+			  'Content-Type': 'application/json',
+			  'Authorization':'Bearer QZYzxZ1sc'
+			}
+		  });
 		const responseJson = await response.json();
 
-		if (responseJson.Search) {
-			setMovies(responseJson.Search);
+		if (responseJson.result) {
+			setMovies(responseJson.result);
 		}
 	};
 
@@ -63,6 +101,7 @@ const App = () => {
 			setFavourites(movieFavourites);
 		}
 	}, []);
+	console.log(movies);
 
 	const saveToLocalStorage = (items) => {
 		localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
@@ -113,3 +152,4 @@ const App = () => {
 };
 
 export default App;
+
