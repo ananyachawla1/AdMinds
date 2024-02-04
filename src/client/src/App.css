@@ -87,11 +87,11 @@ body {
 .overlay {
 	position: absolute;
 	background: rgba(0, 0, 0, 0.8);
-	width: 100%;
+	width: 71%;
 	transition: 0.5s ease;
 	opacity: 0;
 	bottom: 0;
-	font-size: 20px;
+	font-size: 15px;
 	padding: 20px;
 	text-align: center;
 }

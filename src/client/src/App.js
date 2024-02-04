@@ -6,8 +6,10 @@ import SearchBox from "./components/SearchBox";
 import AddFavourites from "./components/AddFavourites";
 import RemoveFavourites from "./components/RemoveFavourites";
 import MovieDetails from "./components/MovieDetails";
+import MovieListrec from "./components/MovieListrec";
 
 const App = () => {
+  const [PopularMovies, setPopularMovies] = useState({});
   const [RecommendedMovies, setRecommendedMovies] = useState([]);
   const [ActionMovies, setActionMovies] = useState([]);
   const [ThrillerMovies, setThrillerMovies] = useState([]);
@@ -18,7 +20,7 @@ const App = () => {
 
   const getMovieRequest = async (genre) => {
     const url = `https://cla-epg.lgads.tv/epg/listings?genre=${genre}&showType=movie`;
-// console.log(url);
+    // console.log(url);
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
@@ -29,7 +31,7 @@ const App = () => {
     const responseJson = await response.json();
     return responseJson.result || [];
   };
-  const getMovieRequestepg=async()=>{
+  const getMovieRequestepg = async () => {
     const urlepg = `http://localhost:3001/epg/recommendation?deviceId=02135de2ef0a1a96f0f237dcb0c2af8c&date=2024-01-01`;
     const responseepg = await fetch(urlepg, {
       headers: {
@@ -40,18 +42,28 @@ const App = () => {
 
     const responseepgJson = await responseepg.json();
     return responseepgJson.result || [];
-  }
+  };
+  const getMovieRequestrec = async () => {
+    const urlrec = `https://cla-recommendation.lgads.tv/recommendation/popular?type=ott`;
+    const responserec = await fetch(urlrec, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer QZYzxZ1sc",
+      },
+    });
 
+    const responserecJson = await responserec.json();
+    return responserecJson;
+  };
   useEffect(() => {
-    getMovieRequestepg().then((movies) =>
-      setRecommendedMovies(movies)
-    );
+    getMovieRequestrec().then((movies) => setPopularMovies(movies));
+    getMovieRequestepg().then((movies) => setRecommendedMovies(movies));
     getMovieRequest("Action").then((movies) => setActionMovies(movies));
     getMovieRequest("Thriller").then((movies) => setThrillerMovies(movies));
     getMovieRequest("Comedy").then((movies) => setComedyMovies(movies));
   }, []);
-console.log(RecommendedMovies);
-console.log(ActionMovies);
+  console.log(RecommendedMovies);
+  console.log(ActionMovies);
   useEffect(() => {
     const movieFavourites =
       JSON.parse(localStorage.getItem("react-movie-app-favourites")) || [];
@@ -77,6 +89,12 @@ console.log(ActionMovies);
     saveToLocalStorage(newFavouriteList);
   };
 
+  const filterMoviesByQueryrec = (movies) => {
+    console.log("popular", movies);
+    return movies?.ott_recommendations?.contents.filter((movie) =>
+      movie.title.toLowerCase().startsWith(searchValue.toLowerCase())
+    );
+  };
   const filterMoviesByQuery = (movies) => {
     return movies.filter((movie) =>
       movie.programInfo.programTitle
@@ -96,23 +114,37 @@ console.log(ActionMovies);
   return (
     <div className="container-fluid movie-app">
       <div className="row d-flex align-items-center mt-4 mb-4">
-        <MovieListHeading heading="AdMinds" />
-        <SearchBox value={searchValue} onChange={setSearchValue} />
+        <div className="col">
+          <MovieListHeading heading="AdMinds" />
+        </div>
+        <div className="col">
+          <SearchBox value={searchValue} onChange={setSearchValue} />
+        </div>
       </div>
       <div className="row">
         {selectedMovie && (
           <MovieDetails movie={selectedMovie} onGoBack={handleGoBack} />
         )}
-        <h2 style={{paddingLeft:20}}>Recommended Movies</h2>
-        <MovieList
-          movies={filterMoviesByQuery(RecommendedMovies)}
+        <h2 style={{ paddingLeft: 20 }}>Popular Movies</h2>
+        <MovieListrec
+          movies={filterMoviesByQueryrec(PopularMovies)}
           handleFavouritesClick={addFavouriteMovie}
           favouriteComponent={AddFavourites}
           handleMovieClick={handleMovieClick}
         />
         <br/>
         <br/>
-        <h2 style={{paddingLeft:20}}>Action Movies</h2>
+        <h2 style={{ paddingLeft: 20 }}>Recommended Movies</h2>
+        <MovieList
+          movies={filterMoviesByQuery(RecommendedMovies)}
+          handleFavouritesClick={addFavouriteMovie}
+          favouriteComponent={AddFavourites}
+          handleMovieClick={handleMovieClick}
+        />
+        <br />
+        <br />
+        <br/>
+        <h2 style={{ paddingLeft: 20 }}>Action Movies</h2>
         <MovieList
           movies={filterMoviesByQuery(ActionMovies)}
           handleFavouritesClick={addFavouriteMovie}
@@ -120,7 +152,8 @@ console.log(ActionMovies);
           handleMovieClick={handleMovieClick}
         />
         <br />
-        <h2 style={{paddingLeft:20}}>Thriller Movies</h2>
+        <br/>
+        <h2 style={{ paddingLeft: 20 }}>Thriller Movies</h2>
         <MovieList
           movies={filterMoviesByQuery(ThrillerMovies)}
           handleFavouritesClick={addFavouriteMovie}
@@ -128,7 +161,8 @@ console.log(ActionMovies);
           handleMovieClick={handleMovieClick}
         />
         <br />
-        <h2 style={{paddingLeft:20}}>Comedy Movies</h2>
+        <br/>
+        <h2 style={{ paddingLeft: 20 }}>Comedy Movies</h2>
         <MovieList
           movies={filterMoviesByQuery(ComedyMovies)}
           handleFavouritesClick={addFavouriteMovie}
