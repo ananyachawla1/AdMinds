@@ -6,12 +6,15 @@ const MovieDetails = ({ movie, onGoBack }) => {
   }
 
   return (
-    <div>
+    <div style={{paddingLeft:20}}>
       <h2>{movie.programInfo.programTitle}</h2>
       <p>Genre: {movie.programInfo.genre}</p>
-      <p>Release Date: {movie.programInfo.releaseDate}</p>
+      <p>Description: {movie.programInfo.longDescription}</p>
+      <p>Show Type: {movie.programInfo.showType}</p>
+      <p>Start Time: {movie.startTime}</p>
+      {/* <p>Release Date: {movie.programInfo.releaseDate}</p> */}
       {/* Add more details here based on your movie structure */}
-      <button onClick={onGoBack}>Go Back</button>
+      <button type='btn-primary' onClick={onGoBack}>Go Back</button>
     </div>
   );
 };

@@ -18,7 +18,7 @@ const MovieList = (props) => {
         // Only render the movie if its title is not in the set of unique titles
         // !uniqueTitles.has(movie.programInfo.programTitle) && (
           <div className='image-container m-3' key={index} style={{ flex: '0 0 15%', width: '100px', padding:20 }} onClick={() => handleMovieClick(movie)}>
-            {movie.programInfo && movie.programInfo.images && movie.programInfo.images.length > 0 && (
+            {(movie.programInfo && movie.programInfo.images && movie.programInfo.images.length > 0) && (
               <img
                 src={movie.programInfo.images[0].url}
                 alt='movie'
@@ -42,7 +42,7 @@ const MovieList = (props) => {
             >
               {FavouriteComponent && <FavouriteComponent />}
             </div>
-            <div>{movie.programInfo && movie.programInfo.programTitle}</div>
+            <div style={{marginTop:20}}>{movie.programInfo && movie.programInfo.programTitle}</div>
           </div>
         // )
       ))}
