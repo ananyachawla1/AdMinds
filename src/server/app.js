@@ -4,6 +4,7 @@ const port = 3001;
 const axios = require("axios");
 const cors = require("cors");
 const bluebird = require("bluebird");
+//const { findDOMNode } = require("react-dom");
 app.use(express.json()); //parsing response from lg api
 app.use(cors());
 const headers = {
@@ -15,7 +16,7 @@ app.get("/example", (req, res) => {
 });
 
 app.get("/pixel/sample", (req, res) => {
-  axios
+  -axios
     .get("https://cla-pixel.lgads.tv/sample", { headers })
     .then((data) => {
       console.log("data", data);
@@ -57,6 +58,22 @@ app.get("/pixel/list/stationId", (req, res) => {
     .catch((err) => res.send(err));
 });
 app.get("/epg/recommendation", (req, res) => {
+  function mode(array) {
+    if (array.length == 0) return null;
+    var modeMap = {};
+    var maxEl = array[0],
+      maxCount = 1;
+    for (var i = 0; i < array.length; i++) {
+      var el = array[i];
+      if (modeMap[el] == null) modeMap[el] = 1;
+      else modeMap[el]++;
+      if (modeMap[el] > maxCount) {
+        maxEl = el;
+        maxCount = modeMap[el];
+      }
+    }
+    return maxEl;
+  }
   const deviceId = req.query.deviceId;
   const date = req.query.date;
   axios
@@ -85,9 +102,24 @@ app.get("/epg/recommendation", (req, res) => {
       //Bluebird mapSeries
       bluebird
         .mapSeries(data.data, function (value, index, arrayLength) {
+          //Set startTime as the time received in pixel API and convert to iSO standard string.
+          const startTime = new Date(value.time);
+          // Set endtime as 48 hours after startTime (add 48 hrs to startTime)
+          const endTime = new Date(value.time);
+          endTime.setUTCHours(startTime.getUTCHours() + 1);
+          // Convert to iSO standard string
+          //const endTimeConverted = new Date(endTime);
+          console.log(
+            "url",
+            `https://cla-epg.lgads.tv/epg/listings?src=tms&stationId=${
+              value.stationId
+            }&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}`
+          );
           return axios
             .get(
-              `https://cla-epg.lgads.tv/epg/listings?src=tms&stationId=${value.stationId}&startTime=2024-01-02T04:00:00&endTime=2024-01-02T05:00:00`,
+              `https://cla-epg.lgads.tv/epg/listings?src=tms&stationId=${
+                value.stationId
+              }&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}`,
               { headers }
             )
             .then((data) => {
@@ -95,14 +127,44 @@ app.get("/epg/recommendation", (req, res) => {
             });
         })
         .then((result) => {
-          console.log("Done!...", result);
+          console.log("Done!...", JSON.stringify(result));
 
           const arrayOfResponses = [];
+          let genreArray = [];
+
           result.forEach((element) => {
+            console.log("element", JSON.stringify(element));
             // const result = { key: value };
+            element.result.forEach((result) => {
+              genreArray.push(...result.programInfo.genre);
+            });
+
+            // const maxGenre = mode(genreArray);
+            // console.log(genreArray);
             arrayOfResponses.push(...element.result);
           });
-          res.status(200).json({ result: arrayOfResponses });
+          console.log("topGenre2", genreArray);
+          const topGenre2 = mode(genreArray);
+          const genreMap = {
+            News: "Action",
+            Children: "Comedy",
+          };
+          const topGenre = genreMap[topGenre2] || "Thriller";
+          console.log(
+            "topGenre",
+            topGenre,
+            `https://cla-epg.lgads.tv/epg/ott?genre=${topGenre}`
+          );
+          return axios
+            .get(
+              `https://cla-epg.lgads.tv/epg/ott?genre=${topGenre}&limit=10`,
+              { headers }
+            )
+            .then((data) => {
+              res.status(200).json(data.data);
+              //   return data.data;
+            });
+          //   res.status(200).json({ result: arrayOfResponses });
         })
         .catch((err) => console.log("EPG LISting error......", err));
       //   const recommendedEpgList = await Promise.all(promises).then(values => { //waiting for promises to resolve/reject

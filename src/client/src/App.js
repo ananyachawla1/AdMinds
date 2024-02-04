@@ -7,6 +7,7 @@ import AddFavourites from "./components/AddFavourites";
 import RemoveFavourites from "./components/RemoveFavourites";
 import MovieDetails from "./components/MovieDetails";
 import MovieListrec from "./components/MovieListrec";
+import MovieListepg from "./components/MovieListepg";
 
 const App = () => {
   const [PopularMovies, setPopularMovies] = useState({});
@@ -102,6 +103,13 @@ const App = () => {
         .startsWith(searchValue.toLowerCase())
     );
   };
+  const filterMoviesByQueryepg = (movies) => {
+    return movies.filter((movie) =>
+      movie.title
+        .toLowerCase()
+        .startsWith(searchValue.toLowerCase())
+    );
+  };
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);
@@ -135,8 +143,8 @@ const App = () => {
         <br/>
         <br/>
         <h2 style={{ paddingLeft: 20 }}>Recommended Movies</h2>
-        <MovieList
-          movies={filterMoviesByQuery(RecommendedMovies)}
+        <MovieListepg
+          movies={filterMoviesByQueryepg(RecommendedMovies)}
           handleFavouritesClick={addFavouriteMovie}
           favouriteComponent={AddFavourites}
           handleMovieClick={handleMovieClick}

@@ -11,35 +11,38 @@ const MovieList = (props) => {
   const handleMovieClick = (movie) => {
     props.handleMovieClick(movie);
   };
+
   return (
     <div
       className="d-flex flex-wrap justify-content-start"
       style={{ display: "flex", flexDirection: "row" }}
     >
-      {props.movies?.map((movie, index) => (
+      {props.movies.map((movie, index) => (
         // Only render the movie if its title is not in the set of unique titles
         // !uniqueTitles.has(movie.programInfo.programTitle) && (
         <div
           className="image-container m-3"
           key={index}
-          style={{ flex: "0 0 15%", width: "100px", padding: 20 }}
-          //   onClick={() => handleMovieClick(movie)}
+          style={{ flex: "0 0 15%", width: "239px", padding: 20 }}
+          // onClick={() => handleMovieClick(movie)}
         >
-          {movie.providers && movie.providers.length > 0 && (
+          {movie && movie.originalImages && movie.originalImages.length > 0 && (
             <img
-              src={movie.thumbnail}
+              src={movie.originalImages[0].url}
               alt="movie"
-              height="200"
-              width="150"
+              height="65"
+              width="110"
               style={{ objectFit: "cover", width: "100%", height: "100%" }}
             />
           )}
-          {(!movie.providers || !movie.providers.length > 0) && (
+          {(!movie ||
+            !movie.originalImages ||
+            movie.originalImages.length === 0) && (
             <img
               src="https://imgs.search.brave.com/bTQyZH99S8mTAIff7nLrbZktAnBvaH3n0o6M0s0kEr4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuZmFuZGFuZ28u/Y29tL2ltYWdlcy9m/YW5kYW5nb2Jsb2cv/TW9vbmZhbGxfUGF5/b2ZmX1ZlcnRpY2Fs/X0tleUFydF8yMDFf/RklOMDhfU0xGX2Jy/aWdodF9GSU5fc20u/anBn" // Placeholder image URL
               alt="placeholder"
-              height="200"
-              width="150"
+              height="100"
+              width="200"
               style={{ objectFit: "cover", width: "100%", height: "100%" }}
             />
           )}
